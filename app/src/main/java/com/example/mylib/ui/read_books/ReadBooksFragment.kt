@@ -12,27 +12,19 @@ import com.example.mylib.databinding.FragmentReadBooksBinding
 class ReadBooksFragment : Fragment() {
 
     private var _binding: FragmentReadBooksBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        b: Bundle?
     ): View {
         val readBooksViewModel =
             ViewModelProvider(this).get(ReadBooksViewModel::class.java)
 
         _binding = FragmentReadBooksBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textGallery
-        readBooksViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {

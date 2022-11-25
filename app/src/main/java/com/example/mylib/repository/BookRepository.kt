@@ -77,6 +77,45 @@ class BookRepository private constructor(context: Context) {
         }
     }
 
+    fun getById(id: Int): BookModel? {
+        var book: BookModel? = null
+        try {
+            val db = dataBase.readableDatabase
+
+            val projection = arrayOf(
+                DataBaseConstants.BOOK.COLUMNS.ID,
+                DataBaseConstants.BOOK.COLUMNS.TITLE,
+                DataBaseConstants.BOOK.COLUMNS.DESCRIPTION,
+                DataBaseConstants.BOOK.COLUMNS.NUMBER_OF_PAGES,
+                DataBaseConstants.BOOK.COLUMNS.AUTHOR_NAME,
+                DataBaseConstants.BOOK.COLUMNS.STATUS
+            )
+
+            val selection = DataBaseConstants.BOOK.COLUMNS.ID + " = ?"
+            val args = arrayOf(id.toString())
+
+            val cursor = db.query(
+                DataBaseConstants.BOOK.TABLE_NAME, projection, selection, args, null, null, null
+            )
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()) {
+                    val title = cursor.getString(cursor.getColumnIndex(DataBaseConstants.BOOK.COLUMNS.TITLE))
+                    val description = cursor.getString(cursor.getColumnIndex(DataBaseConstants.BOOK.COLUMNS.DESCRIPTION))
+                    val numberOfPages = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.BOOK.COLUMNS.NUMBER_OF_PAGES))
+                    val authorName = cursor.getString(cursor.getColumnIndex(DataBaseConstants.BOOK.COLUMNS.AUTHOR_NAME))
+                    val status = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.BOOK.COLUMNS.STATUS))
+
+                    book = BookModel(id, title, description, numberOfPages, authorName, status == 1)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            return book
+        }
+        return book
+    }
+
     fun getAll(): List<BookModel> {
         val bookList = mutableListOf<BookModel>()
         try {

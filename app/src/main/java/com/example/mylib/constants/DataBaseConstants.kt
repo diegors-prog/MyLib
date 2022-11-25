@@ -3,6 +3,7 @@ package com.example.mylib.constants
 class DataBaseConstants private constructor() {
 
     object BOOK {
+        const val ID = "bookId"
         const val TABLE_NAME = "Book"
 
         object COLUMNS {
